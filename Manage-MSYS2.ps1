@@ -14,15 +14,19 @@ $MSYS2_ROOT = "D:\Compilers\msys64"
 $PACMAN = Join-Path $MSYS2_ROOT "usr\bin\pacman.exe"
 
 function Run-Pacman {
-    param([string]$Args)
+    param([string]$CommandArgs)
     Clear-Host
-    Write-Host "🔵 Running Pacman with args: $Args" -ForegroundColor Cyan
-    # Use msys2_shell.cmd to ensure correct environment or just call pacman directly
-    # Calling pacman directly usually works if root is set
-    Start-Process -FilePath $PACMAN -ArgumentList $Args -Wait -NoNewWindow
+    Write-Host "🔵 Running Pacman with args: $CommandArgs" -ForegroundColor Cyan
+    
+    # Split the string into an array for the call operator
+    $argList = $CommandArgs -split ' ' | Where-Object { $_ -ne "" }
+    
+    & $PACMAN $argList
+    
     Write-Host "`n✅ Done. Press any key to return..." -ForegroundColor Green
     [Console]::ReadKey($true) | Out-Null
 }
+
 
 $Options = @(
     "🔄 Update Core & Packages (Syu)",
